@@ -18,17 +18,29 @@
         </svg>
       </template>
       <template #title>
-        <span style="font-size:20px; margin-left:4px;font-weight: 600;">词法分析</span>
+        <span style="font-size:20px; margin-left:4px;font-weight: 600;">进程</span>
       </template>
       <!-- 词法子菜单 -->
       <t-menu-item value="RegexToNfa" class="menu-linkk">
-        <router-link :to="'/cp/RegexToNfa'" class="menu-link">正则表达式转NFA</router-link>
+        <router-link :to="'/so/FCFS'" class="menu-link">先进先出调度算法</router-link>
       </t-menu-item>
       <t-menu-item value="NfaToDfa" class="menu-linkk">
-        <router-link :to="'/cp/NfaToDfa'" class="menu-link">NFA转DFA</router-link>
+        <router-link :to="'/so/SJF'" class="menu-link">短作业优先调度算法</router-link>
       </t-menu-item>
       <t-menu-item value="FSA" class="menu-linkk">
-        <router-link :to="'/cp/FSA'" class="menu-link">词法分析器自动生成</router-link>
+        <router-link :to="'/so/HighResponse'" class="menu-link">高响应比优先调度算法</router-link>
+      </t-menu-item>
+      <t-menu-item value="FSA" class="menu-linkk">
+        <router-link :to="'/so/HighPrio'" class="menu-link">优先级调度算法（非剥夺式）</router-link>
+      </t-menu-item>
+      <t-menu-item value="FSA" class="menu-linkk">
+        <router-link :to="'/so/HighPrio2'" class="menu-link">优先级调度算法（剥夺式）</router-link>
+      </t-menu-item>
+      <t-menu-item value="FSA" class="menu-linkk">
+        <router-link :to="'/so/RR'" class="menu-link">时间片轮转调度算法</router-link>
+      </t-menu-item>
+      <t-menu-item value="FSA" class="menu-linkk">
+        <router-link :to="'/so/FeedbackQueue'" class="menu-link">多级反馈队列调度算法</router-link>
       </t-menu-item>
     </t-submenu>
     <!-- 语法分析父级菜单 -->
@@ -43,19 +55,61 @@
         </svg>
       </template>
       <template #title>
-        <span style="font-size:20px; margin-left:4px;font-weight: 600;">语法分析</span>
+        <span style="font-size:20px; margin-left:4px;font-weight: 600;">内存</span>
       </template>
       <!-- 语法分析子菜单 -->
       <t-menu-item value="RecursiveAnalysis" class="menu-linkk">
-        <router-link :to="'/cp/RecursiveAnalysis'" class="menu-link">递归下降语法分析</router-link>
+        <router-link :to="'/so/PartitionAllocation_FF'" class="menu-link">首次适应算法</router-link>
       </t-menu-item>
       <t-menu-item value="LL" class="menu-linkk">
-        <router-link :to="'/cp/LL'" class="menu-link">LL(1)语法分析</router-link>
+        <router-link :to="'/so/PartitionAllocation_BF'" class="menu-link">最佳适应算法</router-link>
       </t-menu-item>
       <t-menu-item value="LR" class="menu-linkk">
-        <router-link :to="'/cp/SLR'" class="menu-link">SLR(1)语法分析</router-link>
+        <router-link :to="'/so/PartitionAllocation_WF'" class="menu-link">最坏适应算法</router-link>
+      </t-menu-item>
+      <t-menu-item value="LR" class="menu-linkk">
+        <router-link :to="'/so/PartitionAllocation_NF'" class="menu-link">邻近适应算法</router-link>
+      </t-menu-item>
+      <t-menu-item value="LR" class="menu-linkk">
+        <router-link :to="'/so/Replacement_FIFO'" class="menu-link">先进先出置换算法</router-link>
+      </t-menu-item>
+      <t-menu-item value="LR" class="menu-linkk">
+        <router-link :to="'/so/Replacement_OPT'" class="menu-link">最佳置换算法</router-link>
+      </t-menu-item>
+      <t-menu-item value="LR" class="menu-linkk">
+        <router-link :to="'/so/Replacement_LRU'" class="menu-link">最近最久未使用置换算法</router-link>
       </t-menu-item>
     </t-submenu>
+
+    <!-- 词法分析父级菜单 -->
+    <t-submenu value="item-3" mode="popup">
+      <template #icon>
+        <!-- 这里可以添加词法分析对应的图标 SVG -->
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- 示例图标，可根据需求修改 -->
+          <!--            <rect x="2" y="2" width="20" height="20" fill="lightblue" stroke="black" stroke-width="0.5"/>-->
+          <image href="@/assets/img/cplogo7.png" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"/>
+
+        </svg>
+      </template>
+      <template #title>
+        <span style="font-size:20px; margin-left:4px;font-weight: 600;">磁盘</span>
+      </template>
+      <!-- 词法子菜单 -->
+      <t-menu-item value="RegexToNfa" class="menu-linkk">
+        <router-link :to="'/so/FCFS2'" class="menu-link">先来先服务算法</router-link>
+      </t-menu-item>
+      <t-menu-item value="NfaToDfa" class="menu-linkk">
+        <router-link :to="'/so/SCAN'" class="menu-link">扫描算法</router-link>
+      </t-menu-item>
+      <t-menu-item value="FSA" class="menu-linkk">
+        <router-link :to="'/so/CSCAN'" class="menu-link">循环扫描算法</router-link>
+      </t-menu-item>
+      <t-menu-item value="FSA" class="menu-linkk">
+        <router-link :to="'/so/SSTF'" class="menu-link">最短寻道时间优先算法</router-link>
+      </t-menu-item>
+    </t-submenu>
+
   </t-menu>
 </template>
 

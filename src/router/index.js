@@ -15,7 +15,7 @@ import PartitionAllocation_BF from '@/components/test/Os/unit4/PartitionAllocati
 import PartitionAllocation_FF from '@/components/test/Os/unit4/PartitionAllocation_FF.vue';
 import PartitionAllocation_NF from '@/components/test/Os/unit4/PartitionAllocation_NF.vue';
 import PartitionAllocation_WF from '@/components/test/Os/unit4/PartitionAllocation_WF.vue';
-import Replacement_FF from '@/components/test/Os/unit4/Replacement_FF.vue';
+import Replacement_FIFO from '@/components/test/Os/unit4/Replacement_FF.vue';
 import Replacement_LRU from '@/components/test/Os/unit4/Replacement_LRU.vue';
 import Replacement_OPT from '@/components/test/Os/unit4/Replacement_OPT.vue';
 import CSCAN from '@/components/test/Os/unit5/CSCAN.vue';
@@ -42,9 +42,9 @@ const routes = [
     { path: '/so/PartitionAllocation_FF', name: 'PartitionAllocation_FF', component: PartitionAllocation_FF},
     { path: '/so/PartitionAllocation_NF', name: 'PartitionAllocation_NF', component: PartitionAllocation_NF},
     { path: '/so/PartitionAllocation_WF', name: 'PartitionAllocation_WF', component: PartitionAllocation_WF},
-    { path: '/so/Replacement_FF', name: 'Replacement_FF', component: Replacement_FF},
+    { path: '/so/Replacement_FIFO', name: 'Replacement_FIFO', component: Replacement_FIFO},
     { path: '/so/Replacement_LRU', name: 'Replacement_LRU', component: Replacement_LRU},
-    { path: '/so/rEPLACEMENT_OPT', name: 'Replacement_OPT', component: Replacement_OPT},
+    { path: '/so/Replacement_OPT', name: 'Replacement_OPT', component: Replacement_OPT},
     { path: '/so/CSCAN', name: 'CSCAN', component: CSCAN},
     { path: '/so/FCFS2', name: 'FCFS2', component: FCFS2},
     { path: '/so/SCAN', name: 'SCAN', component: SCAN},

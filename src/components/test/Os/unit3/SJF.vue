@@ -1,5 +1,16 @@
 <template>
- <div id="outer">
+  <div class="d-flex flex-row">
+    <div>
+      <t-layout style="flex: none"><Memu/></t-layout>
+    </div>
+      
+    
+  
+ <div id="outer" style="flex: 1; display: flex; flex-direction: column; overflow: auto;"> <!--这是整个动画和按钮功能的容器-->
+  <!-- <div class="card-header" id="cardHeader">
+        <DataStructureContentBarElement :id="this.$route.params.id" :active="1"/>
+      </div> -->
+      
     <el-card class="box-card">
       <div class="setting">
 
@@ -8,8 +19,8 @@
         <div class="box-card-setting-title">
         <div class="box-card-setting-title-1">进程调度算法</div>
         <div class="box-card-setting-title-2">短作业优先（SJF）调度算法</div> 
-         </div>
-          
+        </div>
+        
           <el-form :model="form"  :inline="true" ref="form">
 
          <div v-for="(item,index) in form.pcbItem0" :key="index">
@@ -91,40 +102,53 @@
     <el-divider></el-divider>
 
 
-     <el-drawer
-    title="短作业优先算法"
-    :visible.sync="drawer"
-    :with-header="false">
-        <div id="drawer-text">
-            <div id="drawer-text-title">短作业优先算法</div>
-            <div id="drawer-text-content">  
-            
-             <span style="font-weight:bold; display: block;">算法思想：</span>
-                <div style="margin:10px;margin-bottom: 20px;line-height: 1.5;">短作业优先调度算法是从就绪队列中选择一个或若干个估计运行时间最短的作业，将它们调入内存运行。</div>
+    <el-drawer
+  title="短作业优先算法"
+  :visible.sync="drawer"
+  :with-header="true"
+  :append-to-body="true"
+  size="30%"  >
+  <div
+    style="
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #fafafa;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    "
+  >
+    <h3 style="margin-bottom: 12px;">短作业优先算法</h3>
 
+    <p><strong>算法思想：</strong></p>
+    <p style="margin-bottom: 15px; line-height: 1.6;">
+      短作业优先调度算法是从就绪队列中选择一个或若干个估计运行时间最短的作业，将它们调入内存运行。
+    </p>
 
+    <p><strong>特点：</strong></p>
+    <p style="line-height: 1.6;">
+      该算法的平均等待时间、平均周转时间最少；该算法对长作业不利，长作业的周转时间增加，由于总是优先调度短作业，将导致长作业发生“饥饿现象”。
+    </p>
+  </div>
+</el-drawer>
 
-             <span style="font-weight:bold; display: block;">特点：</span>
-                <div style="margin:10px;margin-bottom: 20px;line-height: 1.5;">该算法的平均等待时间、平均周转时间最少；该算法对长作业不利，长作业的周转时间增加，由于总是优先调度短作业，将导致长作业发生“饥饿现象”。</div>
-            </div>
-        </div>
-    </el-drawer>
+  <!-- 外层flex容器 -->
+<div style="display: flex; flex-direction: row; width: 100%; height: 500px; gap: 20px;">
 
-   <div id="canvas" style="width: 1200px; height: 500px; position:relative">
+  <!-- 动画容器 -->
+  <div id="canvas" style="flex: 1; position: relative; background: #fff; overflow: visible;">
+    <!-- 动画渲染区域 -->
+    <div id="adaptive" style="width: 100%; height: 100%; background: #fff;"></div>
 
-  
-   <div id="adaptive" style="width: 860px; height: 500px; background: #fff; position:absolute;margin-left: 80px;"></div>
-  
     <transition name="fade">
-    <div id="tips1" v-if="show" v-html="tips_text">
-    </div>
+      <div id="tips1" v-if="show" v-html="tips_text" style="position: absolute; top: 0; left: 0;"></div>
     </transition>
     <transition name="fade">
-        <div id="tips2" v-if="show" v-html="linetext">
-        </div>
+      <div id="tips2" v-if="show" v-html="linetext" style="position: absolute; bottom: 0; left: 0;"></div>
     </transition>
-    </div>
-   
+  </div>
+
+</div>
+
    
    
 
@@ -174,11 +198,21 @@
 
   
  </div>
+ <!-- 右侧代码编辑器 -->
+    
+      <resizer/>
+      <MirrorEditor  @language-changed="handleLanguageChange" id="editor" ref="editor" style="width: 55%"/>
+    
+</div>
 </template>
 
 <script>
-
+import DataStructureContentBarElement from "@/components/element/SelectBarElement";
+import MirrorEditor from '@/components/element/Mirror_backup2.vue';
+import http from "@/api/http";
 import * as spritejs from 'spritejs';
+import Memu from "@/components/element/cpMenu.vue";
+import resizer from '@/components/element/resizer.vue';
 
 const { Scene, Sprite, Rect, Label, Group, Path ,Gradient} = spritejs;
 const cpupos = 650;
@@ -186,8 +220,16 @@ const init_top = 80;
 
 export default {
   name: "SJF",
+  components:{
+    MirrorEditor,
+    DataStructureContentBarElement,
+    Memu,
+    resizer,
+  },
     data() {
     return {
+      Language: 'cpp',//cpp语言
+
      form: {
        pcbItem0:[
          {
@@ -265,6 +307,23 @@ export default {
     }
   },
   methods: {
+    handleResize() {
+      clearTimeout(this._resizeTimer);
+      this._resizeTimer = setTimeout(() => {
+        const container = document.getElementById("adaptive");
+        if (container) {
+          container.innerHTML = '';  // 清空内容
+          this.init();               // 延迟重新初始化
+        }
+      }, 200); // 延迟 200ms，防抖+等待DOM稳定
+    },
+
+    // async loadCodeFile(path) {
+    //   const response = await fetch(path);
+    //   const code = await response.text();
+    //   this.editor.setValue(code);  // 如果你用的是 CodeMirror
+    // },
+
     reset()
     {
       this.form.pcbItem0 = [{ pcb_name: '',
@@ -335,8 +394,9 @@ export default {
                 }
             });
         },
-    init()
+    async init()
     {
+      
     const container = document.getElementById("adaptive");
       const scene = new Scene({ // 初始化场景scene，它不是canvas，只是一个用来包裹canvas的div元素
         container,
@@ -380,6 +440,20 @@ export default {
       });
       this.layer.append(line);  
 
+    },
+
+    async Languageinit(){
+      this.handleLanguageChange("cpp");
+    },
+
+    // 切换代码语言
+    handleLanguageChange(newLanguage) {
+      if (newLanguage === "cpp") {
+        this.$refs.editor.loadCodeFile("/code/Compilers/SJF.cpp");
+      } 
+      // else if (newLanguage === "cangjie") {
+      //   this.$refs.editor.loadCodeFile("");
+      // }
     },
 
     deleteItem(index) {
@@ -729,10 +803,18 @@ export default {
   },
   
   mounted() {
-
+    this.Languageinit();
     this.init();
+    window.addEventListener('resize', this.handleResize);
+  },
 
-    },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.handleResize);
+    clearTimeout(this._resizeTimer);
+  },
+
+  
+  
 }
 </script>
 

@@ -1,34 +1,41 @@
 <template>
   <div>
-    <!-- 页面主内容 -->
-    <TopBarElement v-if="commonComponent" />
-    <router-view :key="$route.fullPath" />
-
-    <!-- 悬浮 DeepSeek 聊天窗 -->
-    <DeepSeekChat />
+    <div>
+      <router-view :key="$route.fullPath"></router-view>
+    </div>
   </div>
 </template>
 
 <script>
-import TopBarElement from '@/components/element/TopBarElement'
-import DeepSeekChat from '@/components/DeepSeekChat.vue'
+
+import TopBarElement from '@/components/element/TopBarElement' // TopBar
+
 
 export default {
   name: 'App',
   components: {
     TopBarElement,
-    DeepSeekChat,
   },
+
   mounted() {
-    $('script[src="/test.js"]').remove()
+    $('script[src="/test.js"]').remove();
   },
   computed: {
     commonComponent() {
-      return this.$route.meta.commonComponent
+      // 从路由元数据中获取共同组件
+      return this.$route.meta.commonComponent;
     },
     selectBar() {
-      return this.$route.meta.selectBar
+      // 从路由元数据中获取共同组件
+      return this.$route.meta.selectBar;
     },
   },
+
+
 }
+
+
 </script>
+<style>
+
+</style>
