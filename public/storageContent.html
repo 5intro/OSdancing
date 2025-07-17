@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+    <title>舞动的算法</title>
+    <meta http-equiv="Content-type" content="text/html; charset=UTF-8"/>
+    <!-- 新 Bootstrap5 核心 CSS 文件 -->
+    <link rel="stylesheet" href="/css/bootstrap.css">
+
+
+    <!-- 最新的 Bootstrap5 核心 JavaScript 文件 -->
+    <script src="/js/bootstrap.js"></script>
+    <script type="text/javascript" src="/js/main.js" charset="utf-8"></script>
+    <script src="/js/jq.js"></script>
+    <script type="module" src="/js/storageContent.js"></script>
+
+
+
+</head>
+<body>
+<div class="card">
+    <div class="card-header" id="cardHeader"></div>
+    <div class="card-body">
+        <div style="height: 100%">
+            <div style="display: flex;" id="inner">
+                <div id="pyInputPane" style="margin-left: 10px;">
+
+                    <div id="codeInputWarnings" class="lead">
+
+                        <select id="pythonVersionSelector" class="form-select " style="display: none">
+                            <option value="cpp"></option>
+                        </select>
+
+                    </div>
+
+                    <div id="someoneIsTypingDiv" style="color: #e93f34; font-weight: bold; display: none;">Someone is
+                        typing ...
+                    </div>
+
+                    <div id="codeInputPane" style=" height: 600px;"></div>
+                    <!-- populate with Ace code editor instance -->
+                    <div id="frontendErrorOutput"></div>
+
+                    <p>
+                        <button id="executeBtn" class="btn btn-primary">代码可视化</button>
+                        <button style="margin-left: 20px;" id="liveModeBtn" class="btn btn-primary">实时演示</button>
+                    </p>
+
+
+                    <div id="instructionsPane"></div>
+
+                    <div id="javaOptionsPane" style="margin-top: 20px;">
+                        <!--[<i>coming soon!</i>] Java options: pass in command-line arguments and feed user input to stdin-->
+                    </div>
+
+
+                    <!--    <div id="testCasesParent"></div>-->
+
+                    <!--    <div id="exampleSnippets"></div>-->
+
+                </div>
+
+                <div id="pyOutputPane"></div>
+
+                <div id="chat_div"></div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+
+
+</html>

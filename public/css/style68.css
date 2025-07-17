@@ -1,0 +1,316 @@
+.wrapper {
+    margin: 20px;
+}
+
+/* 输入框大小 */
+.input-min-size {
+    width: 400px;
+}
+
+/* flex布局 */
+.inner-block {
+    display: flex;
+}
+
+/*绘制线的样式*/
+.line-style {
+
+    z-index: 0;
+    height: 4px;
+    border: 4px dashed #003399;
+}
+
+
+/* div块内居中 */
+.mid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+/*绘制正方体*/
+.s-box {
+    font-size: 25px;
+    width: 60px;
+    height: 60px;
+    background-color: #99CC99;
+    border: 1px solid black;
+}
+
+/*滑块容器*/
+.slider-wrapper {
+    display: flex;
+    justify-content: right;
+    padding-right: 40px;
+    margin-to: 40px;
+    align-content: center;
+    align-items: center
+}
+
+/* 绘制长方体 */
+.l-box {
+    font-size: 25px;
+    width: 80px;
+    height: 60px;
+    background-color: #CCFFCC;
+    border: 1px solid black;
+}
+
+/* 绘制长方体 */
+.l-box-right {
+    font-size: 25px;
+    width: 80px;
+    height: 60px;
+    background-color: #99CC99;
+    border: 1px solid black;
+}
+
+.l-box-changed {
+    font-size: 25px;
+    width: 80px;
+    height: 60px;
+    background-color: rgb(255, 153, 102);
+    border: 1px solid black;
+}
+
+.l-box-changedd {
+    font-size: 25px;
+    width: 80px;
+    height: 60px;
+    background-color: #CCFFCC;
+    border: 1px solid black;
+}
+/*清除div之间的空隙*/
+.clear {
+    padding: 0px;
+    margin: 0px;
+}
+
+/* 绘制横线 */
+.line {
+    width: 60px; /* 线的宽度 */
+    height: 4px; /* 线的高度 */
+    background-color: black; /* 线的颜色 */
+}
+
+/*绘制下箭头*/
+.arrow-up {
+    width: 0;
+    height: 8px;
+    border-left: 8px solid transparent; /* 左边框透明 */
+    border-right: 8px solid transparent; /* 右边框透明 */
+    border-bottom: 8px solid black; /* 上边框是箭头的主体，颜色根据需要设置 */
+    /* 为了让箭头居中显示，可以添加一些额外的样式 */
+    /*display: inline-block; !* 让元素可以像文本一样设置对齐方式 *!*/
+    vertical-align: top; /* 垂直居中对齐 */
+    /*margin-right: 5px; !* 根据需要调整与其他内容的间距 *!*/
+    margin-top: 0;
+}
+
+/*绘制下箭头*/
+.arrow-down {
+    width: 0;
+    height: 8px;
+    border-left: 8px solid transparent; /* 左边框透明 */
+    border-right: 8px solid transparent; /* 右边框透明 */
+    border-top: 8px solid black; /* 上边框是箭头的主体，颜色根据需要设置 */
+    /* 为了让箭头居中显示，可以添加一些额外的样式 */
+    /*display: inline-block; !* 让元素可以像文本一样设置对齐方式 *!*/
+    vertical-align: top; /* 垂直居中对齐 */
+    /*margin-right: 5px; !* 根据需要调整与其他内容的间距 *!*/
+    margin-top: 0;
+}
+
+/*绘制竖线*/
+.vertical-line {
+    width: 4px; /* 竖线的宽度 */
+    height: 60px; /* 竖线的高度，可以根据需要调整 */
+    background-color: black; /* 竖线的颜色，可以根据需要设置为其他颜色 */
+    /* 可选：设置居中显示或其他布局属性 */
+    /*margin: 0 auto; !* 如果需要，可以将竖线在其父元素中居中显示 *!*/
+    /* 注意：margin: 0 auto; 在块级元素且其父元素有指定宽度时有效，对于简单的竖线，通常不需要 */
+}
+
+
+/*绘制右箭头*/
+.arrow-right {
+    position: relative;
+    position: relative;
+    height: 0;
+    width: 0;
+}
+
+.arrow-right::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    border: solid transparent;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* 对于不同大小的箭头，调整这些属性值 */
+.arrow-right--small::after {
+    border-width: 8px; /* 箭头的大小 */
+    border-left-color: #333131; /* 箭头的颜色 */
+}
+
+.arrow-right--medium::after {
+    border-width: 15px;
+    border-left-color: black;
+}
+
+.arrow-right--large::after {
+    border-width: 20px;
+    border-left-color: black;
+}
+
+/* 线的容器 */
+.line-wrapper {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    height: 60px;
+    width: 68px;
+}
+
+/* 绘制线加上箭头 */
+.line-style::after {
+    content: '';
+    position: absolute;
+    top: -10px; /* 控制箭头位置 */
+    right: -10px; /* 控制箭头位置 */
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 10px 0 10px 15px; /* 控制箭头大小 */
+    border-color: transparent transparent transparent #003399; /* 控制箭头颜色 */
+}
+
+
+/* 出现的从下至上动画效果 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+/* 从上面出现的动画效果 */
+@keyframes upIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px)
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.up-in {
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+/* 逐步显示的动画效果 */
+@keyframes comeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.come-in {
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+.kong{
+    font-size: 25px;
+    width: 80px;
+    height: 60px;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+#splitContainer {
+    height: 100%;
+    display: flex;
+}
+.panel {
+    padding: 10px;
+    overflow: auto;
+}
+.panel-left {
+    background-color: #f0f0f0;
+}
+.panel-right {
+    /*background-color: #e0e0e0;*/
+}
+
+
+.page-main {
+    text-align: center;
+}
+#input_text {
+    padding: 8px;
+    width: 400px;
+    height: 100px;
+    border: 1px solid #ddd;
+    outline: none;
+    font-size: 13px;
+    line-height: 1.5;
+}
+button {
+    margin-top: 10px;
+    width: 100px;
+    height: 36px;
+    background-color: #187cff;
+    border: none;
+    border-radius: 3px;
+    outline: none;
+    color: #fff;
+    font-size: 14px;
+}
+
+.orange-block {
+    background-color: #ef6925;
+}
+.line-style2 {
+    z-index: 0;
+    height: 2px; /* 将高度从4px改为2px */
+    border: 2px solid red; /* 将边框宽度从4px改为2px */
+}
+
+.line-style2::after {
+    content: '';
+    position: absolute;
+    top: -5px; /* 调整箭头位置 */
+    right: -5px; /* 调整箭头位置 */
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 5px 0 5px 8px; /* 调整箭头大小 */
+    border-color: transparent transparent transparent red; /* 箭头颜色保持不变 */
+}
+.arrow-right--small.red-arrow::after {
+    border-left-color: red !important;
+}
