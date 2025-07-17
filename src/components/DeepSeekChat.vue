@@ -1,24 +1,21 @@
 <template>
-  <div class="chat-float-box" v-show="visible">
-    <div class="chat-header" @click="toggleExpand">
+  <div class="chat-float-box" ref="chatBox" v-show="visible">
+    <div class="chat-header" @mousedown="startDrag">
       💬 DeepSeek 聊天助手
     </div>
 
     <div class="chat-body" v-show="expanded">
-      <div class="ai-options">
-        <button class="option-btn" @click="sendPreset('算法步骤')">算法步骤</button>
-        <button class="option-btn" @click="sendPreset('算法代码')">算法代码</button>
-        <button class="option-btn" @click="sendPreset('算法分析')">算法分析</button>
-        <button class="option-btn" @click="sendPreset('算法流程图')">算法流程图</button>
-      </div>
-
       <div class="ai-reply" v-html="renderedMarkdown"></div>
 
       <div class="ai-input">
-        <textarea v-model="inputText" :disabled="isLoading" placeholder="请输入问题..." />
-        <button class="submit" @click="sendMessage" :disabled="isLoading">
-          发送
-        </button>
+        <textarea
+          v-model="inputText"
+          :disabled="isLoading"
+          placeholder="请输入问题..."
+          @keydown.enter.prevent="sendMessage"
+        />
+        <button class="submit" @click="sendMessage" :disabled="isLoading">发送</button>
+        <button class="stop" @click="stopThinking" :disabled="!isLoading">停止</button>
       </div>
     </div>
   </div>
@@ -35,9 +32,21 @@ const isLoading = ref(false)
 const renderedMarkdown = ref('')
 const expanded = ref(true)
 const visible = ref(true)
+const chatBox = ref(null)
+
+let ws = null
 
 function toggleExpand() {
   expanded.value = !expanded.value
+}
+
+function stopThinking() {
+  if (ws) {
+    ws.close()
+    ws = null
+    isLoading.value = false
+    renderedMarkdown.value += '<p style="color:gray;"><em>⏹️ 已停止思考。</em></p>'
+  }
 }
 
 async function sendMessage() {
@@ -58,20 +67,14 @@ async function sendMessage() {
   }
 }
 
-async function sendPreset(type) {
-  inputText.value = `请讲解一下${type}`
-  await sendMessage()
-}
-
 async function callDeepSeekAPI(question) {
   return new Promise(async (resolve, reject) => {
     const appId = 'f1cbd0ba'
     const apiKey = 'd3a9cd410e737695446786a33ecfa779'
     const apiSecret = 'Nzg3MDMwZDA0ZjA1Mzc4NzEwNDgwMWE4'
-    const domain = 'general' // 一般是 general 或 generalv2
+    const domain = 'general'
     const url = 'wss://spark-openapi.cn-huabei-1.xf-yun.com/v1/assistants/2nh9nigfqa2w_v1'
 
-    // 生成时间戳与签名
     const date = new Date().toUTCString()
     const crypto = await import('crypto-js')
 
@@ -84,69 +87,53 @@ async function callDeepSeekAPI(question) {
 
     const finalUrl = `${url}?authorization=${authorization}&date=${encodeURIComponent(date)}&host=spark-openapi.cn-huabei-1.xf-yun.com`
 
-    let ws
+    ws = new WebSocket(finalUrl)
     let resultText = ''
 
-    try {
-      ws = new WebSocket(finalUrl)
-
-      ws.onopen = () => {
-        const params = {
-          header: {
-            app_id: appId,
-            uid: 'user_001'
-          },
-          parameter: {
-            chat: {
-              domain: domain,
-              temperature: 0.5,
-              max_tokens: 1024
-            }
-          },
-          payload: {
-            message: {
-              text: [{ role: 'user', content: question }]
-            }
-          }
-        }
-        ws.send(JSON.stringify(params))
-      }
-
-      ws.onmessage = (event) => {
-        const res = JSON.parse(event.data)
-        if (res.header.code !== 0) {
-          reject(new Error(`API返回错误: ${res.header.message}`))
-          ws.close()
-          return
-        }
-
-        const choices = res.payload.choices
-        if (choices && choices.text && choices.text.length > 0) {
-          const content = choices.text.map((c) => c.content).join('')
-          resultText += content
-        }
-
-        if (res.header.status === 2) {
-          ws.close()
-          resolve(resultText)
+    ws.onopen = () => {
+      const params = {
+        header: { app_id: appId, uid: 'user_001' },
+        parameter: {
+          chat: { domain, temperature: 0.5, max_tokens: 1024 }
+        },
+        payload: {
+          message: { text: [{ role: 'user', content: question }] }
         }
       }
+      ws.send(JSON.stringify(params))
+    }
 
-      ws.onerror = (err) => {
-        reject(new Error('WebSocket 连接失败'))
+    ws.onmessage = (event) => {
+      const res = JSON.parse(event.data)
+      if (res.header.code !== 0) {
+        reject(new Error(`API错误: ${res.header.message}`))
+        ws.close()
+        return
       }
 
-      ws.onclose = () => {
-        if (!resultText) {
-          reject(new Error('WebSocket 提前关闭，未接收到内容'))
-        }
+      const choices = res.payload.choices
+      if (choices && choices.text?.length > 0) {
+        const content = choices.text.map(c => c.content).join('')
+        resultText += content
       }
-    } catch (e) {
-      reject(new Error('连接异常: ' + e.message))
+
+      if (res.header.status === 2) {
+        ws.close()
+        resolve(resultText)
+      }
+    }
+
+    ws.onerror = () => {
+      reject(new Error('WebSocket 连接失败'))
+    }
+
+    ws.onclose = () => {
+      if (!resultText) {
+        reject(new Error('连接中断，未接收到内容'))
+      }
     }
   })
 }
-
 
 onUpdated(() => {
   renderMathInElement(document.querySelector('.ai-reply'), {
@@ -154,6 +141,42 @@ onUpdated(() => {
       { left: '$$', right: '$$', display: true },
       { left: '$', right: '$', display: false }
     ]
+  })
+})
+
+// 拖动逻辑
+onMounted(() => {
+  const box = chatBox.value
+  const header = box.querySelector('.chat-header')
+  let isDragging = false
+  let offsetX = 0
+  let offsetY = 0
+
+  header.addEventListener('mousedown', (e) => {
+    isDragging = true
+    const rect = box.getBoundingClientRect()
+    offsetX = e.clientX - rect.left
+    offsetY = e.clientY - rect.top
+    document.body.style.userSelect = 'none'
+  })
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return
+    let left = e.clientX - offsetX
+    let top = e.clientY - offsetY
+
+    const maxLeft = window.innerWidth - box.offsetWidth
+    const maxTop = window.innerHeight - box.offsetHeight
+    left = Math.max(0, Math.min(maxLeft, left))
+    top = Math.max(0, Math.min(maxTop, top))
+
+    box.style.left = `${left}px`
+    box.style.top = `${top}px`
+  })
+
+  document.addEventListener('mouseup', () => {
+    isDragging = false
+    document.body.style.userSelect = ''
   })
 })
 </script>
@@ -170,6 +193,7 @@ onUpdated(() => {
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
   z-index: 9999;
   font-family: Arial, sans-serif;
+  cursor: move;
 }
 
 .chat-header {
@@ -177,32 +201,13 @@ onUpdated(() => {
   color: white;
   padding: 10px;
   font-weight: bold;
-  cursor: pointer;
+  cursor: grab;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
 }
 
 .chat-body {
   padding: 10px;
-}
-
-.ai-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-bottom: 10px;
-}
-
-.option-btn {
-  background: #eee;
-  border: none;
-  border-radius: 8px;
-  padding: 6px 10px;
-  font-size: 12px;
-  cursor: pointer;
-}
-.option-btn:hover {
-  background: #ddd;
 }
 
 .ai-reply {
@@ -229,7 +234,8 @@ textarea {
   font-size: 14px;
   border-radius: 6px;
 }
-.submit {
+.submit,
+.stop {
   padding: 0 10px;
   background: #2575fc;
   border: none;
@@ -237,7 +243,8 @@ textarea {
   border-radius: 6px;
   cursor: pointer;
 }
-.submit:hover {
+.submit:hover,
+.stop:hover {
   background: #0056d2;
 }
 </style>
